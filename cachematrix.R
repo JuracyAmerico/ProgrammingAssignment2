@@ -32,14 +32,14 @@
 # This function creates a special "matrix" object that can cache its inverse.
 makeCacheMatrix <- function(x = matrix()) {
         m <- NULL
-        set <- function(y){
-                x <<- y
-                m <<- NULL
+        set <- function(y){ 
+                x <<- y # Thus changes x
+                m <<- NULL # set m to NUll . When the function is called for the first time, m is set to NULL
         }
         get <- function() x
-        setmatrix <- function(solve) m <<- solve
+        setmatrix <- function(solve) m <<- solve #changes m in makeCacheMatrix
         getmatrix <- function() m
-        list(set=set, get=get,
+        list(set=set, get=get, 
              setmatrix=setmatrix,
              getmatrix=getmatrix)
 }
@@ -49,15 +49,15 @@ makeCacheMatrix <- function(x = matrix()) {
 ## This function computes the inverse of the special "matrix" returned by makeCacheMatrix above. If the inverse has already been calculated (and the matrix has not changed), then the cachesolve should retrieve the inverse from the cache.
 
 cacheSolve <- function(x=matrix(), ...) {
-        m<-x$getmatrix()
-        if(!is.null(m)){
+        m <- x$getmatrix() # get m from x(object returned from makeVector)
+        if(!is.null(m)){ # m is not null only when it was calculated before, and it is recalculated when cachemean() is called after new vector is assigned to makeVector,and saved to x
                 message("getting cached data")
                 return(m)
         }
-        matrix <- x$get()
-        m <- solve(matrix, ...)
-        x$setmatrix(m)
-        m
+        matrix <- x$get() #  This line and the next line see if m is null, which solve it never calculated before or new data is assigned to the object, get new data, and calculate solve
+        m <- solve(matrix, ...) 
+        x$setmatrix(m) # save the calculated solve to x
+        m # return it to the caller
 }
 ## Return a matrix that is the inverse of 'x'
 }
